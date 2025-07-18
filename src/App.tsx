@@ -1,6 +1,7 @@
 import SudokuGrid from './components/SudokuGrid';
 import Controls from './components/Controls';
 import NumberPad from './components/NumberPad';
+import WinBanner from './components/WinBanner';
 import { SudokuProvider } from './hooks/SudokuProvider';
 
 export default function App() {
@@ -11,6 +12,7 @@ export default function App() {
         <SudokuGrid />
         <NumberPad />
         <Controls />
+        <WinBanner />
       </main>
     </SudokuProvider>
   );

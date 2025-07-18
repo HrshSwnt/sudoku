@@ -1,4 +1,5 @@
 import { type Cell } from './types';
+import { isValid } from './validate';
 
 
 function fillBoard(board: number[][]): boolean {
@@ -20,7 +21,7 @@ function fillBoard(board: number[][]): boolean {
   return true;
 }
 
-function shuffle(arr: number[]): number[] {
+function shuffle<T>(arr: T[]): T[] {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -33,22 +34,31 @@ export function generateSudoku(): Cell[][] {
   fillBoard(solved);
 
   const puzzle = solved.map((row) => [...row]);
-  for (let i = 0; i < 40; i++) {
-    const r = Math.floor(Math.random() * 9);
-    const c = Math.floor(Math.random() * 9);
+
+  const positions = shuffle(
+    Array.from({ length: 81 }, (_, i) => [Math.floor(i / 9), i % 9])
+  );
+
+  for (const [r, c] of positions) {
+    const backup = puzzle[r][c];
     puzzle[r][c] = 0;
+
+    const copy = puzzle.map((row) => [...row]);
+    if (countSolutions(copy) !== 1) {
+      puzzle[r][c] = backup; // Restore if solution is not unique
+    }
   }
 
   return puzzle.map((row) =>
     row.map((val) => ({
-        value: val === 0 ? null : val,
-        readonly: val !== 0,
-        pencilMarks: [],
-        error: false,
+      value: val === 0 ? null : val,
+      readonly: val !== 0,
+      pencilMarks: [],
+      error: false,
     }))
   );
-
 }
+
 
 export function solveSudoku(inputBoard: Cell[][]): number[][] | null {
   const board = inputBoard.map((row) => row.map((cell) => cell.value || 0));
@@ -56,16 +66,30 @@ export function solveSudoku(inputBoard: Cell[][]): number[][] | null {
   return null;
 }
 
-function isValid(board: number[][], row: number, col: number, num: number): boolean {
-  for (let i = 0; i < 9; i++) {
-    if (board[row][i] === num || board[i][col] === num) return false;
-  }
-  const startRow = Math.floor(row / 3) * 3;
-  const startCol = Math.floor(col / 3) * 3;
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      if (board[startRow + i][startCol + j] === num) return false;
+function countSolutions(board: number[][], limit = 2): number {
+  let count = 0;
+
+  function solve() {
+    if (count >= limit) return; // Early exit if more than 1 solution
+
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (board[row][col] === 0) {
+          for (let num = 1; num <= 9; num++) {
+            if (isValid(board, row, col, num)) {
+              board[row][col] = num;
+              solve();
+              board[row][col] = 0;
+            }
+          }
+          return;
+        }
+      }
     }
+
+    count++;
   }
-  return true;
+
+  solve();
+  return count;
 }
