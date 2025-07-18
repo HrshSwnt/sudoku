@@ -1,22 +1,13 @@
 import { useSudoku } from '../hooks/useSudoku';
 
 export default function Controls() {
-  const { resetBoard, giveHint } = useSudoku();
+  const { resetBoard, giveHint, mistakes } = useSudoku();
 
   return (
-    <div className="mt-4 space-x-2">
-      <button
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        onClick={resetBoard}
-      >
-        Reset
-      </button>
-      <button
-        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        onClick={giveHint}
-      >
-        Hint
-      </button>
+    <div className="flex gap-4 items-center mt-4">
+      <button onClick={resetBoard} className="px-4 py-2 bg-blue-500 text-white rounded">Reset</button>
+      <button onClick={giveHint} className="px-4 py-2 bg-purple-500 text-white rounded">Hint</button>
+      <span className="text-red-600 font-bold text-lg">Mistakes: {mistakes}</span>
     </div>
   );
 }

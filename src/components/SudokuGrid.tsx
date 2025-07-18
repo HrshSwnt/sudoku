@@ -8,7 +8,7 @@ export default function SudokuGrid() {
     <div className="grid grid-cols-9 border border-black">
       {board.map((row, rowIndex) =>
         row.map((cell, colIndex) => (
-          <SudokuCell key={`${rowIndex}-${colIndex}`} row={rowIndex} col={colIndex} value={cell.value} />
+          <SudokuCell key={`${rowIndex}-${colIndex}`} row={rowIndex} col={colIndex} cell={cell} />
         ))
       )}
     </div>

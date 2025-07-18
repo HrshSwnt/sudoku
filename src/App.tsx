@@ -24,3 +24,7 @@ export default function App() {
 // timer
 // diificulty levels
 // dark mode
+// mistake counter
+// mistake fail state
+// clear button
+// undo functionality
