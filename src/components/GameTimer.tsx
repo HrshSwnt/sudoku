@@ -49,9 +49,20 @@ export default function GameTimer() {
     const mins = Math.floor(remaining / 60);
     const secs = Math.floor(remaining % 60);
 
+    const fillColor = remaining < 15 ? 'bg-red-500' : 'bg-blue-400';
+    const pulse = remaining < 10 ? 'animate-pulse' : '';
+
     return (
-        <div className="font-mono text-xl text-gray-800 mb-2">
-            ⏳ Time: {mins}:{secs.toString().padStart(2, '0')}
+        <div className="w-full max-w-md mb-2">
+            <div className="relative w-full h-8 border border-gray-400 rounded overflow-hidden bg-white">
+                <div
+                    className={`absolute top-0 left-0 h-full transition-all duration-300 ease-linear ${fillColor} ${pulse}`}
+                    style={{ width: `${(remaining / timeLimit) * 100}%` }}
+                ></div>
+                <div className="absolute inset-0 flex items-center justify-center font-mono text-sm text-gray-800 z-10">
+                    ⏳ Time: {mins}:{secs.toString().padStart(2, '0')}
+                </div>
+            </div>
         </div>
     );
 }
