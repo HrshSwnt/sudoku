@@ -19,7 +19,7 @@ const WinBanner = () => {
           <div className="text-3xl animate-bounce">🥳🎊🎉</div>
 
           <button
-            onClick={resetBoard}
+            onClick={() => resetBoard()}
             className="mt-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded transition-colors"
           >
             New Game

@@ -16,7 +16,7 @@ export default function Controls() {
     return (
         <div className="flex flex-wrap gap-3 items-center justify-center mt-4">
             <button
-                onClick={resetBoard}
+                onClick={() => resetBoard()}
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded transition"
             >
                 Reset
