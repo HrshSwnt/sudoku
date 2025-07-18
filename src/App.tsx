@@ -28,7 +28,5 @@ export default function App() {
 
 // Need to add
 // pencil marks UI (make the provided numbers stand out)
-// timer
 // diificulty levels
 // dark mode
-// mistake fail state
