@@ -11,6 +11,7 @@ export function useSudokuLogic() {
     );
     const [hasWon, setHasWon] = useState(false);
     const [mistakes, setMistakes] = useState(0);
+    const [hintsUsed, setHintsUsed] = useState(0);
     const [history, setHistory] = useState<Cell[][][]>([]);
 
 
@@ -98,14 +99,37 @@ export function useSudokuLogic() {
         setSelectedCell(null);
         setHasWon(false);
         setMistakes(0);
+        setHintsUsed(0);
+        setHistory([]);
     }
 
     function giveHint() {
-        if (!solution || !selectedCell) return;
+        if (!selectedCell || !solution) return;
         const [r, c] = selectedCell;
-        if (!board[r][c].readonly && board[r][c].value === null) {
-            const hintValue = solution[r][c];
-            inputValue(hintValue);
+
+        // Ignore if already filled or readonly
+        if (board[r][c].readonly || board[r][c].value !== null) return;
+
+        // Save to history for undo
+        const prevBoard = board.map((row) => row.map((cell) => ({ ...cell })));
+        setHistory((h) => [...h, prevBoard]);
+
+        const updatedBoard = prevBoard.map((row, rowIndex) =>
+            row.map((cell, colIndex) => {
+                const newCell = { ...cell };
+                if (rowIndex === r && colIndex === c) {
+                    newCell.value = solution[r][c];
+                    newCell.error = false;
+                }
+                return newCell;
+            })
+        );
+
+        setBoard(updatedBoard);
+        setHintsUsed((h) => h + 1);
+
+        if (isBoardSolved(updatedBoard, solution)) {
+            setHasWon(true);
         }
     }
 
@@ -121,6 +145,7 @@ export function useSudokuLogic() {
         clearCell,
         undo,
         history, // for undo functionality
+        hintsUsed, // for Controls
     };
 }
 

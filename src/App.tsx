@@ -24,5 +24,3 @@ export default function App() {
 // diificulty levels
 // dark mode
 // mistake fail state
-// clear button
-// undo functionality
