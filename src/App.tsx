@@ -5,6 +5,7 @@ import WinBanner from './components/WinBanner';
 import FailBanner from './components/FailBanner';
 import GameTimer from './components/GameTimer';
 import GameStartPrompt from './components/GameStartPrompt';
+import PauseOverlay from './components/PauseOverlay';
 import { SudokuProvider } from './hooks/SudokuProvider';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
         <Controls />
         <WinBanner />
         <FailBanner />
+        <PauseOverlay />
       </main>
     </SudokuProvider>
   );

@@ -1,50 +1,57 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSudoku } from '../hooks/useSudoku';
 
 export default function GameTimer() {
-  const {
-    timeLeft,        // in seconds, set on new game
-    hasWon,
-    hasFailed,
-    setHasFailed,
-  } = useSudoku();
+    const {
+        timeLimit,
+        isPaused,
+        hasWon,
+        hasFailed,
+        setHasFailed,
+        startTime,
+        totalPauseDuration,
+        pauseStartedAt,
+    } = useSudoku();
 
-  const [remaining, setRemaining] = useState(timeLeft);
-  const [startTime, setStartTime] = useState(Date.now());
+    const [remaining, setRemaining] = useState(timeLimit);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // 🧠 Reset timer on new game
-  useEffect(() => {
-    setRemaining(timeLeft);
-    setStartTime(Date.now());
-  }, [timeLeft]);
+    // 🟡 When game starts, reset everything
+    useEffect(() => {
+        if (startTime) {
+            setRemaining(timeLimit);
+        }
+    }, [startTime, timeLimit]);
 
-  // 🧠 Accurate ticking using Date.now()
-  useEffect(() => {
-    if (hasWon || hasFailed) return;
+    // ✅ Update remaining time every 250ms (only if not paused)
+    useEffect(() => {
+        if (!startTime || hasWon || hasFailed || isPaused) return;
 
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const elapsed = Math.floor((now - startTime) / 1000); // in seconds
-      const updated = timeLeft - elapsed;
+        intervalRef.current = setInterval(() => {
+            const pausedTime = totalPauseDuration +
+                (pauseStartedAt.current ? Date.now() - pauseStartedAt.current : 0);
 
-      if (updated <= 0) {
-        setRemaining(0);
-        setHasFailed(true);
-        clearInterval(interval);
-      } else {
-        setRemaining(updated);
-      }
-    }, 250); // smooth interval
+            const elapsed = Math.floor((Date.now() - startTime - pausedTime) / 1000);
+            const newRemaining = Math.max(timeLimit - elapsed, 0);
 
-    return () => clearInterval(interval);
-  }, [timeLeft, hasWon, hasFailed, startTime, setHasFailed]);
+            setRemaining(newRemaining);
 
-  const mins = Math.floor(remaining / 60);
-  const secs = remaining % 60;
-  const isDanger = remaining <= 30; // 🔴 Red if under 30 seconds
-  return (
-    <div className={`font-mono text-xl ${isDanger ? 'text-red-600' : 'text-gray-800'} mb-2`}>
-      ⏳ Time: {mins}:{secs.toString().padStart(2, '0')}
-    </div>
-  );
+            if (newRemaining <= 0 && !hasWon && !hasFailed) {
+                setHasFailed(true);
+            }
+        }, 250);
+
+        return () => clearInterval(intervalRef.current!);
+    }, [isPaused, hasWon, hasFailed, startTime, timeLimit, totalPauseDuration, pauseStartedAt, setHasFailed]);
+
+    if (!startTime) return null;
+
+    const mins = Math.floor(remaining / 60);
+    const secs = Math.floor(remaining % 60);
+
+    return (
+        <div className="font-mono text-xl text-gray-800 mb-2">
+            ⏳ Time: {mins}:{secs.toString().padStart(2, '0')}
+        </div>
+    );
 }

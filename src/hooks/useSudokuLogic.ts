@@ -13,34 +13,32 @@ export function useSudokuLogic() {
     const [hasWon, setHasWon] = useState(false);
     const [hasFailed, setHasFailed] = useState(false);
     const [showStartPrompt, setShowStartPrompt] = useState(true);
+    const [startTime, setStartTime] = useState<number | null>(null);
+    const [totalPauseDuration, setTotalPauseDuration] = useState(0);
+    const pauseStartedAt = useRef<number | null>(null);
+    const [isPaused, setIsPaused] = useState(false);
+
+
+
 
 
     // Game configuration limits
     const [maxMistakes, setMaxMistakes] = useState(5);
     const [maxHints, setMaxHints] = useState(5);
     const [timeLimit, setTimeLimit] = useState(180); // in seconds
-    const [timeLeft, setTimeLeft] = useState(180); // ticks down
-
-    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     // Run countdown timer
     useEffect(() => {
-        if (hasWon || hasFailed || timeLeft <= 0) return;
+        if (isPaused) {
+            pauseStartedAt.current = Date.now(); // Start tracking pause
+        } else if (pauseStartedAt.current !== null) {
+            const pauseDuration = Date.now() - pauseStartedAt.current;
+            setTotalPauseDuration((prev) => prev + pauseDuration); // Add to total
+            pauseStartedAt.current = null;
+        }
+    }, [isPaused]);
 
-        timerRef.current = setInterval(() => {
-            setTimeLeft((prev) => {
-                if (prev <= 1) {
-                    setHasFailed(true);
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
 
-        return () => {
-            if (timerRef.current) clearInterval(timerRef.current);
-        };
-    }, [hasWon, hasFailed]);
 
     function selectCell(row: number, col: number) {
         setSelectedCell([row, col]);
@@ -71,14 +69,16 @@ export function useSudokuLogic() {
             solution[r][c] !== value &&
             board[r][c].value !== value
         ) {
-            setMistakes((m) => m + 1);
+            setMistakes((m) => {
+                const updated = m + 1;
+                if (updated > maxMistakes) setHasFailed(true);
+                return updated;
+            });
         }
 
         if (isBoardSolved(updatedBoard, solution)) {
             setHasWon(true);
         }
-
-        checkFailCondition();
     }
 
     function clearCell() {
@@ -134,20 +134,20 @@ export function useSudokuLogic() {
         );
 
         setBoard(updatedBoard);
-        setHintsUsed((h) => h + 1);
+        setHintsUsed((h) => {
+            const updated = h + 1;
+            if (updated > maxHints) setHasFailed(true);
+            return updated;
+        });
+
 
         if (isBoardSolved(updatedBoard, solution)) {
             setHasWon(true);
         }
 
-        checkFailCondition();
     }
 
-    function checkFailCondition() {
-        if (mistakes + 1 > maxMistakes || hintsUsed + 1 > maxHints) {
-            setHasFailed(true);
-        }
-    }
+
 
     function resetBoard(config?: {
         maxMistakes?: number;
@@ -171,11 +171,15 @@ export function useSudokuLogic() {
         const hintLimit = config?.maxHints ?? 5;
 
         setTimeLimit(time);
-        setTimeLeft(time);
         setMaxMistakes(mistakeLimit);
         setMaxHints(hintLimit);
 
         setShowStartPrompt(false); // 🟢 hide the prompt on start
+        setStartTime(Date.now());
+        setTotalPauseDuration(0);
+        pauseStartedAt.current = null;
+        setIsPaused(false);
+
     }
 
 
@@ -195,10 +199,15 @@ export function useSudokuLogic() {
         clearCell,
         undo,
         history,
-        timeLeft,
         timeLimit,
         setHasFailed,
         showStartPrompt,
         setShowStartPrompt,
+        isPaused,
+        setIsPaused,
+        totalPauseDuration,
+        startTime,
+        setStartTime,
+        pauseStartedAt,
     };
 }
