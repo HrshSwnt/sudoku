@@ -19,12 +19,10 @@ export default function App() {
 }
 
 // Need to add
-// realtime incorrect cell check
 // pencil marks UI (make the provided numbers stand out)
 // timer
 // diificulty levels
 // dark mode
-// mistake counter
 // mistake fail state
 // clear button
 // undo functionality

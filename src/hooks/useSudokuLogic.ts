@@ -11,6 +11,8 @@ export function useSudokuLogic() {
     );
     const [hasWon, setHasWon] = useState(false);
     const [mistakes, setMistakes] = useState(0);
+    const [history, setHistory] = useState<Cell[][][]>([]);
+
 
     function selectCell(row: number, col: number) {
         setSelectedCell([row, col]);
@@ -20,8 +22,13 @@ export function useSudokuLogic() {
         if (!selectedCell || !solution) return;
         const [r, c] = selectedCell;
 
-        // Clone the board first
-        const updatedBoard = board.map((row, rowIndex) =>
+        const prevBoard = board.map((row) => row.map((cell) => ({ ...cell })));
+
+        // Save to history
+        setHistory((h) => [...h, prevBoard]);
+
+        // Prepare new board
+        const updatedBoard = prevBoard.map((row, rowIndex) =>
             row.map((cell, colIndex) => {
                 const newCell = { ...cell };
                 if (rowIndex === r && colIndex === c && !newCell.readonly) {
@@ -32,23 +39,55 @@ export function useSudokuLogic() {
             })
         );
 
-        // Check if it was a mistake
-        const isMistake =
-            !board[r][c].readonly &&
-            solution[r][c] !== value &&
-            board[r][c].value !== value;
-
-        // Update state
         setBoard(updatedBoard);
 
         if (isBoardSolved(updatedBoard, solution)) {
             setHasWon(true);
         }
 
-        if (isMistake) {
-            setMistakes((prev) => prev + 1);
+        // Count mistake only on fresh wrong input
+        if (
+            !board[r][c].readonly &&
+            solution[r][c] !== value &&
+            board[r][c].value !== value
+        ) {
+            setMistakes((m) => m + 1);
         }
     }
+
+    function clearCell() {
+        if (!selectedCell) return;
+        const [r, c] = selectedCell;
+
+        if (board[r][c].readonly) return;
+
+        const prevBoard = board.map((row) => row.map((cell) => ({ ...cell })));
+        setHistory((h) => [...h, prevBoard]);
+
+        const updatedBoard = prevBoard.map((row, rowIndex) =>
+            row.map((cell, colIndex) => {
+                const newCell = { ...cell };
+                if (rowIndex === r && colIndex === c) {
+                    newCell.value = null;
+                    newCell.error = false;
+                }
+                return newCell;
+            })
+        );
+
+        setBoard(updatedBoard);
+    }
+
+    function undo() {
+        setHistory((prev) => {
+            if (prev.length === 0) return prev;
+
+            const last = prev[prev.length - 1];
+            setBoard(last);
+            return prev.slice(0, -1);
+        });
+    }
+
 
 
     function resetBoard() {
@@ -79,5 +118,9 @@ export function useSudokuLogic() {
         giveHint,
         hasWon, // for WinBanner
         mistakes, // for Controls
+        clearCell,
+        undo,
+        history, // for undo functionality
     };
 }
+
