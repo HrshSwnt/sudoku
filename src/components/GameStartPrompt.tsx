@@ -28,14 +28,14 @@ export default function GameStartPrompt() {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 shadow-xl w-[28rem] space-y-4 text-center">
-                <h2 className="text-xl font-bold">🎮 Start New Game</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-xl w-[28rem] space-y-4 text-center">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">🎮 Start New Game</h2>
 
                 <div className="mb-12">
                     <DifficultySlider value={difficulty} onChange={setDifficulty} />
                 </div>
                 <div className="space-y-2 text-left">
-                    <label className="flex justify-between items-center">
+                    <label className="flex justify-between items-center text-gray-700 dark:text-gray-200">
                         Max Mistakes:
                         <input
                             type="number"
@@ -43,11 +43,11 @@ export default function GameStartPrompt() {
                             min={1}
                             max={9}
                             onChange={(e) => setMistakes(+e.target.value)}
-                            className="w-16 border rounded px-2 py-1"
+                            className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
                     </label>
 
-                    <label className="flex justify-between items-center">
+                    <label className="flex justify-between items-center text-gray-700 dark:text-gray-200">
                         Max Hints:
                         <input
                             type="number"
@@ -55,11 +55,11 @@ export default function GameStartPrompt() {
                             min={1}
                             max={9}
                             onChange={(e) => setHints(+e.target.value)}
-                            className="w-16 border rounded px-2 py-1"
+                            className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
                     </label>
 
-                    <label className="flex justify-between items-center">
+                    <label className="flex justify-between items-center text-gray-700 dark:text-gray-200">
                         Time Limit (min):
                         <input
                             type="number"
@@ -67,14 +67,14 @@ export default function GameStartPrompt() {
                             min={1}
                             max={10}
                             onChange={(e) => setTime(+e.target.value)}
-                            className="w-16 border rounded px-2 py-1"
+                            className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
                     </label>
                 </div>
 
                 <button
                     onClick={startGame}
-                    className="bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 transition"
+                    className="bg-blue-600 dark:bg-blue-700 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700 dark:hover:bg-blue-800 transition"
                 >
                     Start Game
                 </button>

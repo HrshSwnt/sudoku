@@ -20,8 +20,8 @@ export default function DifficultySlider({ value, onChange }: Props) {
 
     return (
         <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-                Difficulty (Pre-filled Cells): <strong>{value}</strong>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                Difficulty (Pre-filled Cells): <strong className="text-gray-900 dark:text-gray-100">{value}</strong>
             </label>
 
             <div className="relative w-full pb-10">
@@ -32,7 +32,7 @@ export default function DifficultySlider({ value, onChange }: Props) {
                     max={max}
                     value={value}
                     onChange={(e) => onChange(Number(e.target.value))}
-                    className="w-full appearance-none h-2 bg-gray-300 rounded"
+                    className="w-full appearance-none h-2 bg-gray-300 dark:bg-gray-700 rounded"
                 />
 
                 {/* Markers */}
@@ -44,8 +44,8 @@ export default function DifficultySlider({ value, onChange }: Props) {
                             className="absolute flex flex-col items-center pointer-events-auto cursor-pointer group"
                             onClick={() => onChange(percentToValue(mark.percent))}
                         >
-                            <div className="w-px h-3 bg-gray-500" />
-                            <div className="text-[10px] text-gray-600 group-hover:font-semibold mt-0.5 whitespace-nowrap">
+                            <div className="w-px h-3 bg-gray-500 dark:bg-gray-400" />
+                            <div className="text-[10px] text-gray-600 dark:text-gray-300 group-hover:font-semibold mt-0.5 whitespace-nowrap">
                                 {mark.label}
                             </div>
                         </div>

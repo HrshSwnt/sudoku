@@ -18,31 +18,30 @@ export default function SudokuCell({ row, col, cell }: Props) {
     const dist = rowDist + colDist;
 
     // Background based on mode
-    let bgClass = 'bg-white';
-
-    if (isSelected) {
-        bgClass = 'bg-blue-300';
-    } else if (cell.readonly) {
-        bgClass = 'bg-gray-200';
+    let bgClass = 'bg-white dark:bg-gray-800';
+    if (cell.readonly) {
+        bgClass = 'bg-gray-200 dark:bg-gray-700';
+    } else if (isSelected) {
+        bgClass = 'bg-blue-300 dark:bg-blue-700';
     } else if (cell.error) {
-        bgClass = 'bg-red-300';
+        bgClass = 'bg-red-300 dark:bg-red-700';
     } else if (bloomMode === 'rowcol' && (isSameRow || isSameCol)) {
         if (row === selectedCell?.[0] && col === selectedCell?.[1]) {
-            bgClass = 'bg-blue-300';
+            bgClass = 'bg-blue-300 dark:bg-blue-700';
         } else if (rowDist + colDist === 1) {
-            bgClass = 'bg-blue-100';
+            bgClass = 'bg-blue-100 dark:bg-blue-800';
         } else {
-            bgClass = 'bg-blue-50';
+            bgClass = 'bg-blue-50 dark:bg-blue-900';
         }
     } else if (bloomMode === 'radial' && selectedCell) {
-        if (dist === 1) bgClass = 'bg-blue-100';
-        else if (dist === 2) bgClass = 'bg-blue-50';
+        if (dist === 1) bgClass = 'bg-blue-100 dark:bg-blue-800';
+        else if (dist === 2) bgClass = 'bg-blue-50 dark:bg-blue-900';
     }
 
     return (
         <button
             onClick={() => selectCell(row, col)}
-            className={`w-10 h-10 border border-gray-400 text-center text-lg font-semibold ${bgClass}`}
+            className={`w-10 h-10 border border-gray-400 dark:border-gray-600 text-center text-lg font-semibold ${bgClass}`}
         >
             {cell.value || ''}
         </button>
