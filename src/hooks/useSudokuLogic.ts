@@ -146,11 +146,13 @@ export function useSudokuLogic() {
 
 
     function resetBoard(config?: {
+        prefilledCells?: number;
         maxMistakes?: number;
         maxHints?: number;
         timeLimit?: number;
     }) {
-        const newBoard = generateSudoku();
+        const cellsToKeep = config?.prefilledCells ?? 40;
+        const newBoard = generateSudoku(cellsToKeep);
         const newSolution = solveSudoku(newBoard);
 
         setBoard(newBoard);
