@@ -30,7 +30,6 @@ export default function App() {
   );
 }
 
-// Need to add
 // pencil marks UI (make the provided numbers stand out)
 // I need to add notes/pencil UI to each cell. 
 // Basically, users often take notes of possible numbers without making attempts. 
@@ -39,5 +38,4 @@ export default function App() {
 // Now, the user can select any number they wish and they will be noted in a tinier font within the cell. 
 // The text should adjust dynamically as more numbers are selected. 
 // The user stays in pencil mode until it is toggled off by clicking the pencil icon again. 
-// This will also necessitate the addition of an erase button and changing the existing erase button to a clear button. 
-// dark mode
+// This will also necessitate the addition of an erase button and changing the existing erase button to a clear button.
