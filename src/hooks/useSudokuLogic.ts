@@ -117,7 +117,7 @@ export function useSudokuLogic() {
         if (!selectedCell || !solution || hasWon || hasFailed) return;
         const [r, c] = selectedCell;
 
-        if (board[r][c].readonly || board[r][c].value !== null) return;
+        if (board[r][c].readonly || board[r][c].value !== null || hintsUsed >= maxHints) return;
 
         const prevBoard = board.map((row) => row.map((cell) => ({ ...cell })));
         setHistory((h) => [...h, prevBoard]);
@@ -134,11 +134,7 @@ export function useSudokuLogic() {
         );
 
         setBoard(updatedBoard);
-        setHintsUsed((h) => {
-            const updated = h + 1;
-            if (updated > maxHints) setHasFailed(true);
-            return updated;
-        });
+        setHintsUsed((h) => Math.min(h + 1, maxHints));
 
 
         if (isBoardSolved(updatedBoard, solution)) {

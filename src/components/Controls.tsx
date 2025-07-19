@@ -11,6 +11,7 @@ export default function Controls() {
         setShowStartPrompt,
         setIsPaused,
         isPaused,
+        maxHints,
     } = useSudoku();
 
     const canUndo = history.length > 0;
@@ -19,10 +20,12 @@ export default function Controls() {
         <div className="flex flex-wrap gap-3 items-center justify-center mt-4">
             <button
                 onClick={giveHint}
-                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded transition"
+                disabled={hintsUsed >= maxHints}
+                className={`px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-default`}
             >
-                Hint
+                💡 Hint ({maxHints - hintsUsed})
             </button>
+
 
             <button
                 onClick={clearCell}
