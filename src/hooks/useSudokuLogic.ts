@@ -17,6 +17,7 @@ export function useSudokuLogic() {
     const [totalPauseDuration, setTotalPauseDuration] = useState(0);
     const pauseStartedAt = useRef<number | null>(null);
     const [isPaused, setIsPaused] = useState(false);
+    const [bloomMode, setBloomMode] = useState<'none' | 'rowcol' | 'radial'>('rowcol');
 
 
 
@@ -207,5 +208,7 @@ export function useSudokuLogic() {
         startTime,
         setStartTime,
         pauseStartedAt,
+        bloomMode,
+        setBloomMode,
     };
 }
