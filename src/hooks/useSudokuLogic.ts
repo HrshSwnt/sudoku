@@ -40,6 +40,13 @@ export function useSudokuLogic() {
         }
     }, [isPaused]);
 
+    function stopGame() {
+        setIsPaused(false);
+        setHasFailed(false);
+        setHasWon(false);
+        setStartTime(null); // ⛔ Stop the timer loop
+        setShowStartPrompt(true);
+    }
 
 
     function selectCell(row: number, col: number) {
@@ -270,5 +277,6 @@ export function useSudokuLogic() {
         isPencilMode,
         setIsPencilMode,
         erasePencilMark,
+        stopGame,
     };
 }

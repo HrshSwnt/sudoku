@@ -2,11 +2,10 @@ import { useSudoku } from '../hooks/useSudoku';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function FailBanner() {
-  const { hasFailed, setShowStartPrompt, setHasFailed } = useSudoku();
+  const { hasFailed, stopGame } = useSudoku();
 
   const handleRetry = () => {
-    setHasFailed(false);           // Hide the banner
-    setShowStartPrompt(true);      // Show the config/start prompt
+    stopGame();
   };
 
   return (
@@ -23,7 +22,7 @@ export default function FailBanner() {
           <div className="text-center space-y-5 text-red-800 dark:text-red-100">
             <h2 className="text-3xl font-bold">❌ Game Over</h2>
             <p className="text-lg">You ran out of time or chances.</p>
-            <div className="text-5xl animate-bounce">💀🧩</div>
+            <div className="text-5xl animate-bounce">❌🧩❌</div>
 
             <button
               onClick={handleRetry}
