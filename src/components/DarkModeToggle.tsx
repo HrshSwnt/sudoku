@@ -16,7 +16,7 @@ export default function DarkModeToggle() {
   return (
     <button
       onClick={() => setEnabled((prev) => !prev)}
-      className="text-sm border px-3 py-1 rounded font-medium transition bg-gray-200 dark:bg-gray-700 dark:text-white"
+      className="text-sm border px-3 py-1 mb-3 rounded font-medium transition bg-gray-200 dark:bg-gray-700 dark:text-white"
     >
       {enabled ? '🌙 Dark Mode' : '☀️ Light Mode'}
     </button>
