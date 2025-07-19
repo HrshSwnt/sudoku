@@ -5,12 +5,19 @@ export default function SudokuGrid() {
   const { board } = useSudoku();
 
   return (
-    <div className="grid grid-cols-9 border border-black bg-white dark:bg-gray-900">
-      {board.map((row, rowIndex) =>
-        row.map((cell, colIndex) => (
-          <SudokuCell key={`${rowIndex}-${colIndex}`} row={rowIndex} col={colIndex} cell={cell} />
-        ))
-      )}
+    <div className="w-full max-w-[90vw] sm:max-w-[420px] aspect-square p-1 bg-black rounded">
+      <div className="grid grid-cols-9 w-full h-full">
+        {board.map((row, rowIndex) =>
+          row.map((cell, colIndex) => (
+            <SudokuCell
+              key={`${rowIndex}-${colIndex}`}
+              row={rowIndex}
+              col={colIndex}
+              cell={cell}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 }
