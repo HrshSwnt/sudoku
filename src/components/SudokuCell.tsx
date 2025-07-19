@@ -41,21 +41,23 @@ export default function SudokuCell({ row, col, cell }: Props) {
     return (
         <button
             onClick={() => selectCell(row, col)}
-            className={`aspect-square w-full h-full border border-gray-400 dark:border-gray-600 text-center font-semibold ${bgClass} relative flex items-center justify-center p-0.5`}
+            className={`aspect-square w-full h-full border border-gray-400 dark:border-gray-600 text-center font-semibold ${bgClass} relative flex items-center justify-center p-0`}
         >
             {cell.value !== null ? (
-                <span className="text-[min(1.6rem,4.5vw)] leading-none">{cell.value}</span>
+            <span className="w-full h-full flex items-center justify-center text-[min(2.5rem,8vw)] leading-none">
+                {cell.value}
+            </span>
             ) : (
-                <div className="grid grid-cols-3 gap-[1px] w-full h-full text-[min(0.6rem,2.5vw)] leading-tight text-gray-700 dark:text-gray-300">
-                    {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
-                        <span
-                            key={num}
-                            className="flex items-center justify-center"
-                        >
-                            {cell.pencilMarks.includes(num) ? num : ''}
-                        </span>
-                    ))}
-                </div>
+            <div className="grid grid-cols-3 gap-[1px] w-full h-full text-[min(0.6rem,2.5vw)] leading-tight text-gray-700 dark:text-gray-300">
+                {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
+                <span
+                    key={num}
+                    className="flex items-center justify-center"
+                >
+                    {cell.pencilMarks.includes(num) ? num : ''}
+                </span>
+                ))}
+            </div>
             )}
         </button>
     );
