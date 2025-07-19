@@ -2,11 +2,10 @@ import { useSudoku } from '../hooks/useSudoku';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function FailBanner() {
-  const { hasFailed, setShowStartPrompt, setHasFailed } = useSudoku();
+  const { hasFailed, stopGame } = useSudoku();
 
   const handleRetry = () => {
-    setHasFailed(false);           // Hide the banner
-    setShowStartPrompt(true);      // Show the config/start prompt
+    stopGame();
   };
 
   return (
