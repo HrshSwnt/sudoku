@@ -2,30 +2,35 @@ import { useSudoku } from "../hooks/useSudoku";
 import { motion, AnimatePresence } from "framer-motion";
 
 const WinBanner = () => {
-  const { hasWon, resetBoard } = useSudoku();
+  const { hasWon, setShowStartPrompt, setHasWon } = useSudoku();
+
+  const handleNewGame = () => {
+    setHasWon(false); // Hide the banner
+    setShowStartPrompt(true); // Show the config/start prompt
+  };
 
   return (
     <AnimatePresence>
       {hasWon && (
         <motion.div
           key="win-banner"
-          initial={{ opacity: 0, scale: 0.8, y: -20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: -10 }}
-          transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
-          className="bg-green-100 text-green-800 border border-green-400 px-4 py-3 rounded mb-4 text-center font-semibold text-lg flex flex-col items-center gap-2 shadow-lg
-            dark:bg-green-900 dark:text-green-100 dark:border-green-700"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="fixed inset-0 z-50 bg-white bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-90 backdrop-blur-sm flex items-center justify-center"
         >
-          <div className="text-2xl">🎉 You solved the Sudoku! 🎉</div>
-          <div className="text-3xl animate-bounce">🥳🎊🎉</div>
+          <div className="text-center space-y-5 text-green-800 dark:text-green-100">
+            <h2 className="text-4xl font-bold">🎉 You solved the Sudoku! 🎉</h2>
+            <div className="text-5xl animate-bounce">🥳🎊🎉</div>
 
-          <button
-            onClick={() => resetBoard()}
-            className="mt-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded transition-colors
-              dark:bg-green-700 dark:hover:bg-green-800 dark:text-green-100"
-          >
-            New Game
-          </button>
+            <button
+              onClick={handleNewGame}
+              className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white px-6 py-2 rounded font-semibold text-lg shadow transition"
+            >
+              New Game
+            </button>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

@@ -245,6 +245,7 @@ export function useSudokuLogic() {
         inputValue,
         resetBoard,
         giveHint,
+        setHasWon,
         hasWon,
         hasFailed,
         mistakes,

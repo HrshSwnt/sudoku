@@ -13,6 +13,7 @@ export default function Controls() {
         setIsPaused,
         isPaused,
         maxHints,
+        maxMistakes,
         hasFailed,
         hasWon,
         setIsPencilMode,
@@ -123,7 +124,7 @@ export default function Controls() {
 
 
             <span className="text-red-600 font-bold text-lg ml-2 dark:text-red-400">
-                Mistakes: {mistakes} / {maxHints}
+                Mistakes: {mistakes} / {maxMistakes}
             </span>
 
             <span className="text-blue-600 font-bold text-lg ml-2 dark:text-blue-400">

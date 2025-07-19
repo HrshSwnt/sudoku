@@ -41,7 +41,7 @@ export default function GameStartPrompt() {
                             type="number"
                             value={mistakes}
                             min={1}
-                            max={9}
+                            max={200}
                             onChange={(e) => setMistakes(+e.target.value)}
                             className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
@@ -53,7 +53,7 @@ export default function GameStartPrompt() {
                             type="number"
                             value={hints}
                             min={1}
-                            max={9}
+                            max={200}
                             onChange={(e) => setHints(+e.target.value)}
                             className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
@@ -65,7 +65,7 @@ export default function GameStartPrompt() {
                             type="number"
                             value={time}
                             min={1}
-                            max={10}
+                            max={100}
                             onChange={(e) => setTime(+e.target.value)}
                             className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
