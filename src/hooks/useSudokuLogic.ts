@@ -71,7 +71,7 @@ export function useSudokuLogic() {
         ) {
             setMistakes((m) => {
                 const updated = m + 1;
-                if (updated > maxMistakes) setHasFailed(true);
+                if (updated >= maxMistakes) setHasFailed(true);
                 return updated;
             });
         }
