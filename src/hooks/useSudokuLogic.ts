@@ -18,6 +18,7 @@ export function useSudokuLogic() {
     const pauseStartedAt = useRef<number | null>(null);
     const [isPaused, setIsPaused] = useState(false);
     const [bloomMode, setBloomMode] = useState<'none' | 'rowcol' | 'radial'>('rowcol');
+    const [isPencilMode, setIsPencilMode] = useState(false);
 
 
 
@@ -49,38 +50,66 @@ export function useSudokuLogic() {
         if (!selectedCell || !solution || hasWon || hasFailed) return;
         const [r, c] = selectedCell;
 
-        const prevBoard = board.map((row) => row.map((cell) => ({ ...cell })));
+        // ✅ Deep copy including pencilMarks
+        const prevBoard = board.map((row) =>
+            row.map((cell) => ({
+                ...cell,
+                pencilMarks: [...cell.pencilMarks],
+            }))
+        );
         setHistory((h) => [...h, prevBoard]);
 
         const updatedBoard = prevBoard.map((row, rowIndex) =>
             row.map((cell, colIndex) => {
                 const newCell = { ...cell };
+
                 if (rowIndex === r && colIndex === c && !newCell.readonly) {
-                    newCell.value = value;
-                    newCell.error = solution[r][c] !== value;
+                    if (isPencilMode) {
+                        if (newCell.value === null) {
+                            // ✅ Toggle pencil mark safely
+                            const marks = [...newCell.pencilMarks];
+                            const index = marks.indexOf(value);
+                            if (index !== -1) {
+                                marks.splice(index, 1);
+                            } else {
+                                marks.push(value);
+                                marks.sort();
+                            }
+                            newCell.pencilMarks = marks;
+                        }
+                    } else {
+                        newCell.value = value;
+                        newCell.error = solution[r][c] !== value;
+                        newCell.pencilMarks = []; // Clear on value commit
+                    }
                 }
+
                 return newCell;
             })
         );
 
         setBoard(updatedBoard);
 
-        if (
-            !board[r][c].readonly &&
-            solution[r][c] !== value &&
-            board[r][c].value !== value
-        ) {
-            setMistakes((m) => {
-                const updated = m + 1;
-                if (updated >= maxMistakes) setHasFailed(true);
-                return updated;
-            });
-        }
+        if (!isPencilMode) {
+            if (
+                !board[r][c].readonly &&
+                solution[r][c] !== value &&
+                board[r][c].value !== value
+            ) {
+                setMistakes((m) => {
+                    const updated = m + 1;
+                    if (updated >= maxMistakes) setHasFailed(true);
+                    return updated;
+                });
+            }
 
-        if (isBoardSolved(updatedBoard, solution)) {
-            setHasWon(true);
+            if (isBoardSolved(updatedBoard, solution)) {
+                setHasWon(true);
+            }
         }
     }
+
+
 
     function clearCell() {
         if (!selectedCell || hasWon || hasFailed) return;
@@ -181,6 +210,33 @@ export function useSudokuLogic() {
 
     }
 
+    function erasePencilMark() {
+        if (!selectedCell || hasWon || hasFailed) return;
+        const [r, c] = selectedCell;
+
+        if (board[r][c].readonly || board[r][c].value !== null) return;
+
+        // ✅ Save snapshot before change
+        const prevBoard = board.map((row) =>
+            row.map((cell) => ({
+                ...cell,
+                pencilMarks: [...cell.pencilMarks],
+            }))
+        );
+        setHistory((h) => [...h, prevBoard]);
+
+        const updatedBoard = prevBoard.map((row, rowIndex) =>
+            row.map((cell, colIndex) => {
+                if (rowIndex === r && colIndex === c) {
+                    return { ...cell, pencilMarks: [] }; // Clear only pencil marks
+                }
+                return cell;
+            })
+        );
+
+        setBoard(updatedBoard);
+    }
+
 
     return {
         board,
@@ -210,5 +266,8 @@ export function useSudokuLogic() {
         pauseStartedAt,
         bloomMode,
         setBloomMode,
+        isPencilMode,
+        setIsPencilMode,
+        erasePencilMark,
     };
 }

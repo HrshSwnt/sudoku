@@ -41,9 +41,19 @@ export default function SudokuCell({ row, col, cell }: Props) {
     return (
         <button
             onClick={() => selectCell(row, col)}
-            className={`w-10 h-10 border border-gray-400 dark:border-gray-600 text-center text-lg font-semibold ${bgClass}`}
+            className={`w-10 h-10 border border-gray-400 dark:border-gray-600 text-center font-semibold ${bgClass} relative`}
         >
-            {cell.value || ''}
+            {cell.value !== null ? (
+                <span className="text-lg">{cell.value}</span>
+            ) : (
+                <div className="grid grid-cols-3 text-[10px] leading-[1.2] text-gray-700 dark:text-gray-300">
+                    {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
+                        <span key={num} className="h-3 w-3 flex items-center justify-center">
+                            {cell.pencilMarks.includes(num) ? num : ''}
+                        </span>
+                    ))}
+                </div>
+            )}
         </button>
     );
 }
