@@ -44,11 +44,11 @@ export default function SudokuCell({ row, col, cell }: Props) {
             className={`aspect-square w-full h-full border border-gray-400 dark:border-gray-600 text-center font-semibold ${bgClass} relative flex items-center justify-center p-0`}
         >
             {cell.value !== null ? (
-            <span className="w-full h-full flex items-center justify-center text-[min(2.5rem,8vw)] leading-none">
+            <span className="w-full h-full flex items-center justify-center text-[min(3.3rem,11vw)] leading-none">
                 {cell.value}
             </span>
             ) : (
-            <div className="grid grid-cols-3 gap-[1px] w-full h-full text-[min(0.6rem,2.5vw)] leading-tight text-gray-700 dark:text-gray-300">
+            <div className="grid grid-cols-3 gap-[0.2px] w-full h-full text-[min(0.75rem,3vw)] leading-tight text-gray-700 dark:text-gray-300">
                 {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
                 <span
                     key={num}
