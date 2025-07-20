@@ -9,10 +9,10 @@ export default function GameStartPrompt() {
         setShowStartPrompt,
     } = useSudoku();
 
-    const [mistakes, setMistakes] = useState(5);
-    const [hints, setHints] = useState(5);
-    const [time, setTime] = useState(3); // in minutes
-    const [difficulty, setDifficulty] = useState(40); // default: Easy
+    const [mistakes, setMistakes] = useState(3);
+    const [hints, setHints] = useState(3);
+    const [time, setTime] = useState(5); // in minutes
+    const [difficulty, setDifficulty] = useState(30);
 
     function startGame() {
         resetBoard({
