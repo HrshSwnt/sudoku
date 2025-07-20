@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function SudokuCell({ row, col, cell }: Props) {
-    const { selectCell, selectedCell, bloomMode } = useSudoku();
+    const { board, selectCell, selectedCell, bloomMode } = useSudoku();
     const isSelected = selectedCell?.[0] === row && selectedCell?.[1] === col;
 
     const isSameRow = selectedCell?.[0] === row;
@@ -16,27 +16,38 @@ export default function SudokuCell({ row, col, cell }: Props) {
     const rowDist = selectedCell ? Math.abs(selectedCell[0] - row) : 0;
     const colDist = selectedCell ? Math.abs(selectedCell[1] - col) : 0;
     const dist = rowDist + colDist;
+    const selectedCellHasError = selectedCell && board[selectedCell[0]][selectedCell[1]].error;
+
 
     // Background color logic
     let bgClass = 'bg-white dark:bg-gray-800';
+
+
     if (cell.readonly) {
         bgClass = 'bg-gray-200 dark:bg-gray-700';
+    } else if (isSelected && cell.error) {
+        bgClass = 'bg-red-400 dark:bg-red-800';
     } else if (isSelected) {
         bgClass = 'bg-blue-300 dark:bg-blue-700';
     } else if (cell.error) {
         bgClass = 'bg-red-300 dark:bg-red-700';
     } else if (bloomMode === 'rowcol' && (isSameRow || isSameCol)) {
-        if (row === selectedCell?.[0] && col === selectedCell?.[1]) {
-            bgClass = 'bg-blue-300 dark:bg-blue-700';
-        } else if (rowDist + colDist === 1) {
-            bgClass = 'bg-blue-100 dark:bg-blue-800';
+        if (selectedCellHasError) {
+            if (dist === 1) bgClass = 'bg-red-200 dark:bg-red-900';
+            else bgClass = 'bg-red-100 dark:bg-red-950';
         } else {
-            bgClass = 'bg-blue-50 dark:bg-blue-900';
+            if (dist === 1) bgClass = 'bg-blue-100 dark:bg-blue-800';
+            else bgClass = 'bg-blue-50 dark:bg-blue-900';
         }
     } else if (bloomMode === 'radial' && selectedCell) {
-        if (dist === 1) bgClass = 'bg-blue-100 dark:bg-blue-800';
-        else if (dist === 2) bgClass = 'bg-blue-50 dark:bg-blue-900';
-    }
+        if (selectedCellHasError) {
+            if (dist === 1) bgClass = 'bg-red-200 dark:bg-red-900';
+            else if (dist === 2) bgClass = 'bg-red-100 dark:bg-red-950';
+        } else {
+            if (dist === 1) bgClass = 'bg-blue-100 dark:bg-blue-800';
+            else if (dist === 2) bgClass = 'bg-blue-50 dark:bg-blue-900';
+        }
+    } 
 
     // Thicker border styles for 3x3 subgrid divisions
     const borderClasses = [
