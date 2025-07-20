@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "build:android": "VITE_TARGET=android vite build",
+    "build:android:full": "npm run build:android && npx cap copy && npx cap sync && npx cap open android",
     "build:gh": "VITE_TARGET=gh-pages vite build",
     "deploy": "VITE_TARGET=gh-pages vite build && gh-pages -d dist"
   },
