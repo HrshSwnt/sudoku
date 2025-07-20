@@ -19,6 +19,7 @@ export function useSudokuLogic() {
     const [isPaused, setIsPaused] = useState(false);
     const [bloomMode, setBloomMode] = useState<'none' | 'rowcol' | 'radial'>('rowcol');
     const [isPencilMode, setIsPencilMode] = useState(false);
+    const [numberCounts, setNumberCounts] = useState<Map<number, number>>(new Map());
 
 
 
@@ -28,6 +29,12 @@ export function useSudokuLogic() {
     const [maxMistakes, setMaxMistakes] = useState(5);
     const [maxHints, setMaxHints] = useState(5);
     const [timeLimit, setTimeLimit] = useState(180); // in seconds
+
+    useEffect(() => {
+        const counts = computeNumberCounts(board);
+        setNumberCounts(counts);
+    }, [board]);
+
 
     // Run countdown timer
     useEffect(() => {
@@ -48,6 +55,17 @@ export function useSudokuLogic() {
         setShowStartPrompt(true);
     }
 
+    function computeNumberCounts(board: Cell[][]): Map<number, number> {
+        const counts = new Map<number, number>();
+        for (const row of board) {
+            for (const cell of row) {
+                if (cell.value !== null) {
+                    counts.set(cell.value, (counts.get(cell.value) || 0) + 1);
+                }
+            }
+        }
+        return counts;
+    }
 
     function selectCell(row: number, col: number) {
         setSelectedCell([row, col]);
@@ -278,5 +296,6 @@ export function useSudokuLogic() {
         setIsPencilMode,
         erasePencilMark,
         stopGame,
+        numberCounts,
     };
 }
