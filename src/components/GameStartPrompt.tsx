@@ -9,17 +9,27 @@ export default function GameStartPrompt() {
         setShowStartPrompt,
     } = useSudoku();
 
-    const [mistakes, setMistakes] = useState(3);
-    const [hints, setHints] = useState(3);
-    const [time, setTime] = useState(5); // in minutes
+    const defaultMistakes = 3;
+    const defaultHints = 3;
+    const defaultTime = 5;
+
+    const [mistakes, setMistakes] = useState<number | ''>(defaultMistakes);
+    const [mistakesTouched, setMistakesTouched] = useState(false);
+
+    const [hints, setHints] = useState<number | ''>(defaultHints);
+    const [hintsTouched, setHintsTouched] = useState(false);
+
+    const [time, setTime] = useState<number | ''>(defaultTime);
+    const [timeTouched, setTimeTouched] = useState(false);
+
     const [difficulty, setDifficulty] = useState(30);
 
     function startGame() {
         resetBoard({
             prefilledCells: difficulty,
-            maxMistakes: mistakes,
-            maxHints: hints,
-            timeLimit: time * 60,
+            maxMistakes: typeof mistakes === 'number' ? mistakes : defaultMistakes,
+            maxHints: typeof hints === 'number' ? hints : defaultHints,
+            timeLimit: (typeof time === 'number' ? time : defaultTime) * 60,
         });
         setShowStartPrompt(false);
     }
@@ -34,6 +44,7 @@ export default function GameStartPrompt() {
                 <div className="mb-12">
                     <DifficultySlider value={difficulty} onChange={setDifficulty} />
                 </div>
+
                 <div className="space-y-2 text-left">
                     <label className="flex justify-between items-center text-gray-700 dark:text-gray-200">
                         Max Mistakes:
@@ -42,7 +53,21 @@ export default function GameStartPrompt() {
                             value={mistakes}
                             min={1}
                             max={200}
-                            onChange={(e) => setMistakes(+e.target.value)}
+                            onFocus={() => {
+                                if (!mistakesTouched) {
+                                    setMistakes('');
+                                }
+                            }}
+                            onBlur={() => {
+                                if (mistakes === '') {
+                                    setMistakes(defaultMistakes);
+                                    setMistakesTouched(false);
+                                }
+                            }}
+                            onChange={(e) => {
+                                setMistakes(+e.target.value);
+                                setMistakesTouched(true);
+                            }}
                             className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
                     </label>
@@ -54,7 +79,21 @@ export default function GameStartPrompt() {
                             value={hints}
                             min={1}
                             max={200}
-                            onChange={(e) => setHints(+e.target.value)}
+                            onFocus={() => {
+                                if (!hintsTouched) {
+                                    setHints('');
+                                }
+                            }}
+                            onBlur={() => {
+                                if (hints === '') {
+                                    setHints(defaultHints);
+                                    setHintsTouched(false);
+                                }
+                            }}
+                            onChange={(e) => {
+                                setHints(+e.target.value);
+                                setHintsTouched(true);
+                            }}
                             className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
                     </label>
@@ -66,7 +105,21 @@ export default function GameStartPrompt() {
                             value={time}
                             min={1}
                             max={100}
-                            onChange={(e) => setTime(+e.target.value)}
+                            onFocus={() => {
+                                if (!timeTouched) {
+                                    setTime('');
+                                }
+                            }}
+                            onBlur={() => {
+                                if (time === '') {
+                                    setTime(defaultTime);
+                                    setTimeTouched(false);
+                                }
+                            }}
+                            onChange={(e) => {
+                                setTime(+e.target.value);
+                                setTimeTouched(true);
+                            }}
                             className="w-16 border rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700"
                         />
                     </label>
